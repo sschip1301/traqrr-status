@@ -1,0 +1,113 @@
+# Upptime-config voor status.traqrr.com (repo sschip1301/traqrr-status, aangemaakt uit de template upptime/upptime).
+# Kopieer dit bestand naar de root van die repo. Zie infra/status/README.md.
+owner: sschip1301
+repo: traqrr-status
+
+sites:
+  # /api/health: 503 + "down" als de database weg is, "degraded" als de worker geen hartslag meer geeft.
+  - name: Website en app
+    url: https://traqrr.com/api/health
+    expectedStatusCodes: [200]
+    maxResponseTime: 5000
+    __dangerous__body_down: '"status":"down"'
+  - name: Orderbewaking
+    url: https://traqrr.com/api/health
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: '"worker":"ok"'
+  # /api/public/status: geaggregeerd per onderdeel (src/server/publicStatus.ts); volgorde key, status ligt vast.
+  - name: Koersen
+    url: https://traqrr.com/api/public/status
+    expectedStatusCodes: [200]
+    __dangerous__body_degraded: '"key":"market","status":"degraded"'
+    __dangerous__body_down: '"key":"market","status":"down"'
+  - name: Exchanges
+    url: https://traqrr.com/api/public/status
+    expectedStatusCodes: [200]
+    __dangerous__body_degraded: '"key":"exchanges","status":"degraded"'
+    __dangerous__body_down: '"key":"exchanges","status":"down"'
+
+status-website:
+  cname: status.traqrr.com
+  name: TRAQRR Status
+  introTitle: "Status van TRAQRR"
+  introMessage: ""
+  logoUrl: https://traqrr.com/icon-192.png
+  favicon: https://traqrr.com/icon-192.png
+  theme: dark
+  navbar:
+    - title: TRAQRR
+      href: https://traqrr.com
+    - title: Hulp
+      href: https://traqrr.com/hulp
+  # Huisstijl (docs/HUISSTIJL.md): grafiet, warm wit, goud accent.
+  css: |
+    :root { --body-background-color: #111315; --card-background-color: #191C20; --body-text-color: #F3F0E8; --nav-background-color: #111315; --nav-border-bottom-color: #2A2F35; --tag-up-background-color: #79C7A5; --tag-down-background-color: #F08D96; --tag-degraded-background-color: #EBCB8B; }
+    a { color: #E7B567; }
+
+i18n:
+  activeIncidents: Lopende storingen
+  allSystemsOperational: Alles werkt
+  incidentReport: "Storing #$NUMBER →"
+  activeIncidentSummary: "Begonnen $DATE, $POSTS berichten"
+  incidentTitle: "Storing $NUMBER"
+  incidentDetails: Details
+  incidentFixed: Opgelost
+  incidentOngoing: Bezig
+  incidentOpenedAt: Begonnen
+  incidentClosedAt: Opgelost
+  incidentSubscribe: Volgen
+  incidentViewOnGitHub: Op GitHub
+  incidentCommentSummary: "$AUTHOR op $DATE"
+  incidentBack: "← Terug"
+  pastIncidents: Eerdere storingen
+  pastIncidentsResolved: "Opgelost in $MINUTES min, $POSTS berichten"
+  liveStatus: Nu
+  overallUptime: "Beschikbaarheid: $UPTIME"
+  overallUptimeTitle: Beschikbaarheid
+  averageResponseTime: "Gemiddelde reactietijd: $TIMEms"
+  averageResponseTimeTitle: Reactietijd
+  sevenDays: 7 dagen
+  thirtyDays: 30 dagen
+  oneYear: 1 jaar
+  allTime: Altijd
+  all: Alles
+  degraded: Verstoord
+  down: Storing
+  up: Werkt
+  duration: Duur
+  ago: geleden
+  lastUpdated: "Bijgewerkt $DATE"
+  rateLimitExceededTitle: Even geduld
+  rateLimitExceededIntro: Te veel verzoeken aan GitHub. Probeer het over een paar minuten opnieuw.
+  rateLimitExceededWhatDoesErrorMean: Wat betekent dit?
+  rateLimitExceededErrorMeaning: GitHub beperkt het aantal verzoeken per uur.
+  rateLimitExceededErrorHowCanFix: Hoe los ik dit op?
+  rateLimitExceededErrorFix: Wacht een paar minuten.
+  rateLimitExceededGeneratePAT: ""
+  rateLimitExceededHasSet: ""
+  rateLimitExceededRemoveToken: ""
+  rateLimitExceededGenerate: ""
+  url: URL
+  status: Status
+  history: Geschiedenis
+  incidents: Storingen
+  responseTime: Reactietijd
+  responseTimeGraphAlt: Reactietijd in de tijd
+  startTime: Begin
+  endTime: Einde
+  closedAt: Opgelost
+  issue: Storing
+  sevenDaysAgo: 7 dagen geleden
+  thirtyDaysAgo: 30 dagen geleden
+  oneYearAgo: 1 jaar geleden
+  allTimeAgo: Altijd
+  footer: ""
+
+workflowSchedule:
+  graphs: "0 0 * * *"
+  responseTime: "0 23 * * *"
+  staticSite: "0 1 * * *"
+  summary: "0 0 * * *"
+  updateTemplate: "0 0 * * *"
+  updates: "0 3 * * *"
+  uptime: "*/5 * * * *"
